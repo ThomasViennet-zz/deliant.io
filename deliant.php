@@ -124,7 +124,6 @@ class Deliant extends Module
       if (!empty($id_customer)) {
         Db::getInstance()->insert('deliant', $UTM_NOW);
       } else {
-
         if ($this->context->cookie->__isset('deliant')) {
           $cookieDeliant = $this->context->cookie->__get('deliant');
           $UTM = unserialize($cookieDeliant);
