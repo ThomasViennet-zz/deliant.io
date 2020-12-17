@@ -37,7 +37,7 @@ class Deliant extends Module
         $this->name = 'deliant';
         $this->tab = 'analytics_stats';
         $this->version = '1.0.0';
-        $this->author = 'Deliant';
+        $this->author = 'deliant';
         $this->need_instance = 0;
 
         /**
@@ -47,7 +47,7 @@ class Deliant extends Module
 
         parent::__construct();
 
-        $this->displayName = $this->l('Deliant');
+        $this->displayName = $this->l('deliant');
         $this->description = $this->l('Understand my data simply.');
 
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall Deliant ?');
@@ -68,7 +68,11 @@ class Deliant extends Module
         return parent::install() &&
             $this->registerHook('header') &&
             $this->registerHook('backOfficeHeader') &&
-            $this->registerHook('displayHeader');
+            $this->registerHook('displayHeader') &&
+            $this->registerHook('registerGDPRConsent') &&
+            $this->registerHook('registerGDPRConsent') &&
+            $this->registerHook('actionDeleteGDPRCustomer') &&
+            $this->registerHook('actionExportGDPRData');
     }
 
     public function uninstall()
@@ -80,47 +84,80 @@ class Deliant extends Module
         return parent::uninstall();
     }
 
+    public function hookActionDeleteGDPRCustomer ($customer)
+    {
+      // if (!empty($customer['email']) && Validate::isEmail($customer['email'])) {
+      //     $sql = "DELETE FROM "._DB_PREFIX_."popnewsletter_subcribers WHERE email = '".pSQL($customer['email'])."'";
+      //     if (Db::getInstance()->execute($sql)) {
+      //         return json_encode(true);
+      //     }
+      //     return json_encode($this->l('Newsletter Popup : Unable to delete customer using email.'));
+      // }
+    }
+
+    public function hookActionExportGDPRData ($customer)
+    {
+       // if (!Tools::isEmpty($customer['email']) && Validate::isEmail($customer['email'])) {
+       //     $sql = "SELECT * FROM "._DB_PREFIX_."popnewsletter_subcribers WHERE email = '".pSQL($customer['email'])."'";
+       //     if ($res = Db::getInstance()->ExecuteS($sql)) {
+       //         return json_encode($res);
+       //     }
+       //     return json_encode($this->l('Newsletter Popup : Unable to export customer using email.'));
+       // }
+    }
+
     public function hookDisplayHeader()
     {
-      $this->context =Context::getContext();
+      $this->context = Context::getContext();
       $id_customer = $this->context->customer->id;
 
-      if(!empty($_GET['utm_source']) OR !empty($_GET['utm_medium']) OR !empty($_GET['utm_campaign']) OR !empty($_GET['utm_term']) OR !empty($_GET['utm_content']))
+      $utm_source = Tools::getValue('utm_source');
+      $utm_medium = Tools::getValue('utm_medium');
+      $utm_campaign = Tools::getValue('utm_campaign');
+      $utm_term = Tools::getValue('utm_term');
+      $utm_content = Tools::getValue('utm_content');
+
+      if(!empty($utm_source) OR !empty($utm_medium) OR !empty($utm_campaign) OR !empty($utm_term) OR !empty($utm_content))
       {
-        $source = $_GET['utm_source'];
-        $medium = $_GET['utm_medium'];
-        $campaign = $_GET['utm_campaign'];
-        $term = $_GET['utm_term'];
-        $content = $_GET['utm_content'];
         $date = date("Y-m-d H:i:s");
-        $UTM_NOW = array('id_customer'=> $id_customer, 'utm_source'=>$source, 'utm_medium'=>$medium, 'utm_campaign'=>$campaign, 'utm_content'=>$content, 'utm_term'=>$term, 'date'=>$date);
+        $UTM_NOW = array('id_customer'=> $id_customer, 'utm_source'=>$utm_source, 'utm_medium'=>$utm_medium, 'utm_campaign'=>$utm_campaign, 'utm_content'=>$utm_content, 'utm_term'=>$utm_term, 'date'=>$date);
 
         if(!empty($id_customer))
         {
             Db::getInstance()->insert('deliant', $UTM_NOW);
         }else {
-          if(isset($_COOKIE['Deliant']))
+
+          if($this->context->cookie->__isset('deliant'))
           {
-            $UTM = unserialize($_COOKIE['Deliant']);
+            $cookieDeliant = $this->context->cookie->__get('deliant');
+            $UTM = unserialize($cookieDeliant);
             array_push($UTM, $UTM_NOW);
-            setcookie("Deliant", serialize($UTM), time()+36000);
+
+            // $this->context->cookie->__set('deliant', serialize($UTM), time()+36000);
+            // $this->context->cookie->write();
+
+            setcookie("deliant", serialize($UTM), time()+36000);
           }else {
             $UTM = array($UTM_NOW);
-            setcookie("Deliant", serialize($UTM), time()+36000);
+
+            // $this->context->cookie->__set('deliant', serialize($UTM), time()+36000);
+            // $this->context->cookie->write();
+
+            setcookie("deliant", serialize($UTM), time()+36000);
           }
         }
       }
 
-      if(!empty($id_customer) AND isset($_COOKIE['Deliant']))
+      if(!empty($id_customer) AND isset($_COOKIE['deliant']))
       {
-        $UTM = unserialize($_COOKIE['Deliant']);
+        $UTM = unserialize($_COOKIE['deliant']);
 
         foreach ($UTM as $key => &$value) {
           $value['id_customer'] = $id_customer;
           Db::getInstance()->insert('deliant', $value);
         }
-        setcookie("Deliant",'',-1);
-        unset($_COOKIE['Deliant']);
+        setcookie("deliant",'',-1);
+        unset($_COOKIE['deliant']);
       }
     }
 }
