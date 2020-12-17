@@ -117,17 +117,17 @@ class Deliant extends Module
     $utm_term = Tools::getValue('utm_term');
     $utm_content = Tools::getValue('utm_content');
 
-    if(!empty($utm_source) or !empty($utm_medium) or !empty($utm_campaign) or !empty($utm_term) or !empty($utm_content))
+    if (!empty($utm_source) or !empty($utm_medium) or !empty($utm_campaign) or !empty($utm_term) or !empty($utm_content))
     {
       $date = date("Y-m-d H:i:s");
       $UTM_NOW = array('id_customer'=> $id_customer, 'utm_source'=>$utm_source, 'utm_medium'=>$utm_medium, 'utm_campaign'=>$utm_campaign, 'utm_content'=>$utm_content, 'utm_term'=>$utm_term, 'date'=>$date);
 
-      if(!empty($id_customer))
+      if (!empty($id_customer))
       {
         Db::getInstance()->insert('deliant', $UTM_NOW);
-      }else {
+      } else {
 
-        if($this->context->cookie->__isset('deliant'))
+        if ($this->context->cookie->__isset('deliant'))
         {
           $cookieDeliant = $this->context->cookie->__get('deliant');
           $UTM = unserialize($cookieDeliant);
@@ -137,7 +137,7 @@ class Deliant extends Module
           // $this->context->cookie->write();
 
           setcookie("deliant", serialize($UTM), time()+36000);
-        }else {
+        } else {
           $UTM = array($UTM_NOW);
 
           // $this->context->cookie->__set('deliant', serialize($UTM), time()+36000);
@@ -148,7 +148,7 @@ class Deliant extends Module
       }
     }
 
-    if(!empty($id_customer) and isset($_COOKIE['deliant']))
+    if (!empty($id_customer) and isset($_COOKIE['deliant']))
     {
       $cookieDeliant = $this->context->cookie->__get('deliant');
       $UTM = unserialize($cookieDeliant);
@@ -157,7 +157,7 @@ class Deliant extends Module
         $value['id_customer'] = $id_customer;
         Db::getInstance()->insert('deliant', $value);
       }
-      setcookie("deliant", '',-1);
+      setcookie("deliant", '', -1);
       unset($cookieDeliant);
     }
   }
