@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
 	<name>deliant</name>
-	<displayName><![CDATA[Deliant]]></displayName>
+	<displayName><![CDATA[deliant]]></displayName>
 	<version><![CDATA[1.0.0]]></version>
 	<description><![CDATA[Understand my data simply.]]></description>
-	<author><![CDATA[Deliant]]></author>
+	<author><![CDATA[deliant]]></author>
 	<tab><![CDATA[analytics_stats]]></tab>
 	<is_configurable>1</is_configurable>
 	<need_instance>1</need_instance>
