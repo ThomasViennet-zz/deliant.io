@@ -1,5 +1,5 @@
 {*
-* 2007-2020 PrestaShop
+* 2007-2021 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,19 +18,21 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2020 PrestaShop SA
+*  @copyright 2007-2021 PrestaShop SA
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <div class="panel">
-	<h3><i class="icon icon-credit-card"></i> {l s='Deliant' mod='deliant'}</h3>
+	<h3><i class="icon icon-credit-card"></i> {l s='deliant' mod='deliant'}</h3>
 	<p>
-		<strong>{l s='Deliant capture les UTM détectés sur votre site.' mod='deliant'}</strong><br />
-		{l s='1. Faites un export (Format : OpenDocument Spreedsheet) des tables "ps_orders" et "ps_deliant" la base de données.' mod='deliant'}<br />
-		{l s='2. Importez le contenu de ces fichiers dans les onglets "ps_orders" et "ps_deliant" de votre Google Spreadsheet "Deliant".' mod='deliant'}<br />
-		{l s='3. Indiquez vos budgets de communications.' mod='deliant'}<br />
-		{l s='4. Analysez vos données !' mod='deliant'}
+		<strong>{l s='Here is my new generic module!' mod='deliant'}</strong><br />
+		{l s='Thanks to PrestaShop, now I have a great module.' mod='deliant'}<br />
+		{l s='I can configure it using the following configuration form.' mod='deliant'}
+	</p>
+	<br />
+	<p>
+		{l s='This module will boost your sales!' mod='deliant'}
 	</p>
 </div>
 
