@@ -1,2 +1,2 @@
 # deliant
-deliant.io
+https://deliant.io
