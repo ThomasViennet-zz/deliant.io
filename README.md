@@ -1,2 +1,3 @@
 # deliant
-https://deliant.io
+Module Prestashop qui enregistre en base de données les UTM des visiteurs.
+https://deliant.io auteur : https://thomasviennet.fr
