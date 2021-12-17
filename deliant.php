@@ -1,6 +1,6 @@
 <?php
 /**
-* 2007-2020 PrestaShop
+* 2007-2021 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2020 PrestaShop SA
+*  @copyright 2007-2021 PrestaShop SA
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -35,9 +35,9 @@ class Deliant extends Module
     public function __construct()
     {
         $this->name = 'deliant';
-        $this->tab = 'advertising_marketing';
+        $this->tab = 'analytics_stats';
         $this->version = '1.0.0';
-        $this->author = 'deliant';
+        $this->author = 'Thomas Viennet';
         $this->need_instance = 0;
 
         /**
@@ -48,11 +48,9 @@ class Deliant extends Module
         parent::__construct();
 
         $this->displayName = $this->l('deliant');
-        $this->description = $this->l('Le condensé qui permet d’avancer.');
+        $this->description = $this->l('Suivez facilement votre retour sur investissement selon vos sources d’acquisition.');
 
         $this->confirmUninstall = $this->l('Êtes-vous sûr de vouloir désinstaller deliant ?');
-
-        $this->ps_versions_compliancy = array('min' => '1.6', 'max' => _PS_VERSION_);
     }
 
     /**
@@ -67,7 +65,8 @@ class Deliant extends Module
 
         return parent::install() &&
             $this->registerHook('header') &&
-            $this->registerHook('backOfficeHeader');
+            $this->registerHook('backOfficeHeader') &&
+            $this->registerHook('displayTop');
     }
 
     public function uninstall()
@@ -220,5 +219,51 @@ class Deliant extends Module
     {
         $this->context->controller->addJS($this->_path.'/views/js/front.js');
         $this->context->controller->addCSS($this->_path.'/views/css/front.css');
+
+        $this->context =Context::getContext();
+        $id_customer = $this->context->customer->id;
+
+        if(!empty($_GET['utm_source']) OR !empty($_GET['utm_medium']) OR !empty($_GET['utm_campaign']) OR !empty($_GET['utm_term']) OR !empty($_GET['utm_content']))
+        {
+          $source = $_GET['utm_source'];
+          $medium = $_GET['utm_medium'];
+          $campaign = $_GET['utm_campaign'];
+          $term = $_GET['utm_term'];
+          $content = $_GET['utm_content'];
+          $date = date("Y-m-d H:i:s");
+          $UTM_NOW = array('id_customer'=> $id_customer, 'utm_source'=>$source, 'utm_medium'=>$medium, 'utm_campaign'=>$campaign, 'utm_content'=>$content, 'utm_term'=>$term, 'date'=>$date);
+
+          if(!empty($id_customer))
+          {
+              Db::getInstance()->insert('deliant', $UTM_NOW);
+          }else {
+            if(isset($_COOKIE['Deliant']))
+            {
+              $UTM = unserialize($_COOKIE['Deliant']);
+              array_push($UTM, $UTM_NOW);
+              setcookie("Deliant", serialize($UTM), time()+36000);
+            }else {
+              $UTM = array($UTM_NOW);
+              setcookie("Deliant", serialize($UTM), time()+36000);
+            }
+          }
+        }
+
+        if(!empty($id_customer) AND isset($_COOKIE['Deliant']))
+        {
+          $UTM = unserialize($_COOKIE['Deliant']);
+
+          foreach ($UTM as $key => &$value) {
+            $value['id_customer'] = $id_customer;
+            Db::getInstance()->insert('deliant', $value);
+          }
+          setcookie("Deliant",'',-1);
+          unset($_COOKIE['Deliant']);
+        }
+    }
+
+    public function hookDisplayTop()
+    {
+        /* Place your code here. */
     }
 }

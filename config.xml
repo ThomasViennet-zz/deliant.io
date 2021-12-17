@@ -3,9 +3,9 @@
 	<name>deliant</name>
 	<displayName><![CDATA[deliant]]></displayName>
 	<version><![CDATA[1.0.0]]></version>
-	<description><![CDATA[Le condensé qui permet d’avancer.]]></description>
-	<author><![CDATA[deliant]]></author>
-	<tab><![CDATA[advertising_marketing]]></tab>
+	<description><![CDATA[Suivez facilement votre retour sur investissement selon vos sources d’acquisition.]]></description>
+	<author><![CDATA[Thomas Viennet]]></author>
+	<tab><![CDATA[analytics_stats]]></tab>
 	<is_configurable>1</is_configurable>
 	<need_instance>1</need_instance>
 </module>

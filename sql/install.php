@@ -1,6 +1,6 @@
 <?php
 /**
-* 2007-2020 PrestaShop
+* 2007-2021 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,16 +19,15 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2020 PrestaShop SA
+*  @copyright 2007-2021 PrestaShop SA
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-
 $sql = array();
 
 $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'deliant` (
     `id_deliant` int(11) NOT NULL AUTO_INCREMENT,
-    PRIMARY KEY  (`id_deliant`)
+    PRIMARY KEY  (`id_deliant`), id_customer int(11), utm_source VARCHAR(255), utm_medium VARCHAR(255), utm_campaign VARCHAR(255), utm_content VARCHAR(255), utm_term VARCHAR(255), date DateTime
 ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
 
 foreach ($sql as $query) {
